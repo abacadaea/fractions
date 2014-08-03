@@ -30,7 +30,6 @@ Fraction.randomFraction = function(cap) {
 }
 
 
-
 /* 
  * Puzzle - a single problem
  */
@@ -198,6 +197,7 @@ Game.prototype.finish = function() {
       .addClass("jumbotron")
       .append("<h1>Game Over!</h1>")
       .append("<h2>Score: " + score + "</h2>")
+      .append("<a href=\"/play\" class=\"btn btn-success\">Play again</a>")
   );
 }
 

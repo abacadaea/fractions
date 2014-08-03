@@ -5,11 +5,7 @@
 
 {% block main_body %}
 <div class="col-md-12">
-  <div class="jumbotron">
-    <h1>Welcome to One-Half</h1>
-    <h2>Use the left and right arrow keys to select the bigger fraction</h2>
-    <h2>Good luck!</h2>
-    <a class="btn btn-success" href="/play">Let's Go!</a>
+  <div class="game-container">
   </div>
 </div>
 {% endblock %}
@@ -17,7 +13,11 @@
 {% block js %}
 <script type="text/javascript" src="/js/math.min.js"></script>
 <script type="text/javascript" src="/js/ajax.js"></script>
+<script type="text/javascript" src="/js/timer.js"></script>
+<script type="text/javascript" src="/js/game.js"></script>
 
 <script type="text/javascript">
+var g = new Game($(".game-container"));
+g.start();
 </script>
 {% endblock %}
