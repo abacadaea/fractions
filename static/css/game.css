@@ -1,0 +1,26 @@
+div.game-container{
+  height: 100%;
+}
+
+div.game-body{
+  text-align: center;
+}
+
+div.puzzle-container{
+  font-weight: bold;
+  font-size:5em;
+  height:1.5em;
+}
+
+span.puzzle-fraction{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+div.puzzle-correct{
+  color:green;
+}
+
+div.puzzle-incorrect{
+  color:red;
+}

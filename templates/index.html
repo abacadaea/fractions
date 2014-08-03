@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/css/game.css">
+{% endblock %}
+
+{% block main_body %}
+<div class="col-md-12">
+  Score: <span class="score">0</span>
+  <div class="game-container">
+    <div class="game-body">
+      <div class="puzzle-current"></div>
+      <div class="puzzle-previous"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="/js/math.min.js"></script>
+<script type="text/javascript" src="/js/ajax.js"></script>
+<script type="text/javascript" src="/js/game.js"></script>
+
+<script type="text/javascript">
+pp.gameStart();
+</script>
+{% endblock %}
