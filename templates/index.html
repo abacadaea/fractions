@@ -5,11 +5,15 @@
 
 {% block main_body %}
 <div class="col-md-12">
-  Score: <span class="score">0</span>
+  <div class="game-score">
+    Score: <span class="score">0</span>
+  </div>
   <div class="game-container">
     <div class="game-body">
-      <div class="puzzle-current"></div>
-      <div class="puzzle-previous"></div>
+      <table class="puzzle-list">
+        <thead class="puzzle-current"></thead>
+        <tbody class="puzzle-previous"></tbody>
+      </table>
     </div>
   </div>
 </div>

@@ -59,17 +59,17 @@ Puzzle.prototype.getSign = function() {
 }
 
 Puzzle.prototype.toString = function() {
-  var left_div = $("<span/>")
+  var left_div = $("<td/>")
     .addClass("puzzle-fraction")
     .html(this.left.toString());
-  var right_div = $("<span/>")
+  var right_div = $("<td/>")
     .addClass("puzzle-fraction")
     .html(this.right.toString());
-  var sign_div = $("<span/>")
+  var sign_div = $("<td/>")
     .addClass("puzzle-sign")
     .html(this.getSign());
   
-  var result = $("<div/>")
+  var result = $("<tr/>")
     .addClass("puzzle-container")
     .attr("id", this.id)
     .append(left_div)

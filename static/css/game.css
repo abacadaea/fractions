@@ -6,21 +6,33 @@ div.game-body{
   text-align: center;
 }
 
-div.puzzle-container{
+div.game-score{
+  font-size:2em;
+}
+
+table.puzzle-list{
+  margin: auto;
+}
+
+tr.puzzle-container{
   font-weight: bold;
   font-size:5em;
-  height:1.5em;
+  height:2em;
+  text-align: center;
 }
 
-span.puzzle-fraction{
-  margin-left: 10%;
-  margin-right: 10%;
+td.puzzle-fraction{
+  width: 30%;
 }
 
-div.puzzle-correct{
+td.puzzle-sign{
+  width: 40%;
+}
+
+.puzzle-correct{
   color:green;
 }
 
-div.puzzle-incorrect{
+.puzzle-incorrect{
   color:red;
 }
