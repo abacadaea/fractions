@@ -36,3 +36,7 @@ td.puzzle-sign{
 .puzzle-incorrect{
   color:red;
 }
+
+.game-timer{
+  font-size:3em;
+}

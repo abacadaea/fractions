@@ -1,3 +1,6 @@
+/* 
+ * Fraction 
+ */
 function Fraction(numerator, denominator) {
   var gcd = math.gcd(numerator, denominator);
 
@@ -20,12 +23,17 @@ Fraction.equals = function(f1, f2) {
   return Math.abs(f1.value - f2.value) < 1e-9;
 }
 
-Fraction.randomFraction = function() {
-  var numerator = 1 + Math.floor(Math.random() * 20);
-  var denominator = 1 + Math.floor(Math.random() * 20);
+Fraction.randomFraction = function(cap) {
+  var numerator = 1 + Math.floor(Math.random() * cap);
+  var denominator = 1 + Math.floor(Math.random() * cap);
   return new Fraction(numerator, denominator);
 }
 
+
+
+/* 
+ * Puzzle - a single problem
+ */
 function Puzzle(left, right, id) {
   this.left = left;
   this.right = right;
@@ -88,27 +96,45 @@ Puzzle.generatePuzzle = function(id) {
   var f2 = new Fraction(0,1);
   // maybe can allow equals
   while (Fraction.equals(f1,f2)) {
-    f1 = Fraction.randomFraction();
-    f2 = Fraction.randomFraction();
+    f1 = Fraction.randomFraction(5);
+    f2 = Fraction.randomFraction(5);
   }
   return new Puzzle(f1, f2, id);
 }
 
-function PuzzlePlayer() {
+
+/*
+ * PuzzlePlayer - object that allows continuous playing of game
+ */
+function PuzzlePlayer(selector) {
+  this.selector = selector;
   this.score = 0;
   this.puzzles = [];
   
-  this.game_length = 60*1000; // 60 seconds
-  this.start_time = 0;
+  // scope hack
+  var pp = this;
+  $(document).keyup(function(event){
+    if (event.keyCode == 37)
+      pp.select(0);
+    else if (event.keyCode == 39)
+      pp.select(1);
+  });
 }
 
-PuzzlePlayer.prototype.gameStart = function() {
-   this.start_time = new Date().getTime();
-   this.nextPuzzle();
-}
-
-PuzzlePlayer.prototype.gameOver = function() {
-  alert ("Game Over!");
+PuzzlePlayer.prototype.start = function() {
+  this.selector
+    .append(
+      $("<div/>")
+        .addClass("game-score")
+        .html("Score: <span class=\"score\">0</span>")
+    ).append(
+      $("<table/>")
+        .addClass("puzzle-list")
+        .append($("<thead/>").addClass("puzzle-current"))
+        .append($("<tbody/>").addClass("puzzle-previous"))
+    );
+      
+  this.nextPuzzle();
 }
 
 PuzzlePlayer.prototype.displayPuzzle = function(puzzle) {
@@ -118,7 +144,6 @@ PuzzlePlayer.prototype.displayPuzzle = function(puzzle) {
 PuzzlePlayer.prototype.nextPuzzle = function() {
   var puzzle = Puzzle.generatePuzzle(this.index);
   this.puzzles.push(puzzle);
-  console.log(puzzle);
 
   this.displayPuzzle(puzzle);
 }
@@ -137,10 +162,40 @@ PuzzlePlayer.prototype.select = function(value) {
   this.nextPuzzle();
 }
 
-var pp = new PuzzlePlayer();
-$(document).keyup(function(event){
-  if (event.keyCode == 37)
-    pp.select(0);
-  else if (event.keyCode == 39)
-    pp.select(1);
-});
+
+function Game(selector) {
+  var timer_div = $("<div/>").addClass("game-timer");
+  var game_div = $("<div/>").addClass("game-body");
+  this.selector = selector;
+  this.selector
+    .append(timer_div)
+    .append(game_div);
+
+  this.game_length = 3*1000 + 50; // 30 seconds
+  this.start_time = 0;
+
+  // scope hack
+  var game = this;
+  this.timer = new DisplayTimer(
+    timer_div, 
+    this.game_length, 
+    function() { game.finish(); timer_div.hide(); });
+  this.pp = new PuzzlePlayer(game_div);
+}
+
+Game.prototype.start = function (){
+  this.start_time = new Date().getTime();
+  this.timer.start();
+  this.pp.start();
+}
+
+Game.prototype.finish = function() {
+  var score = this.pp.score;
+  $(".game-body").html(
+    "<div class='jumbotron'><h1>Game Over!</h1></div>"
+  );
+}
+
+Game.prototype.isFinished = function() {
+  return this.timer.isFinished();
+}

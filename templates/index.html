@@ -5,16 +5,7 @@
 
 {% block main_body %}
 <div class="col-md-12">
-  <div class="game-score">
-    Score: <span class="score">0</span>
-  </div>
   <div class="game-container">
-    <div class="game-body">
-      <table class="puzzle-list">
-        <thead class="puzzle-current"></thead>
-        <tbody class="puzzle-previous"></tbody>
-      </table>
-    </div>
   </div>
 </div>
 {% endblock %}
@@ -22,9 +13,11 @@
 {% block js %}
 <script type="text/javascript" src="/js/math.min.js"></script>
 <script type="text/javascript" src="/js/ajax.js"></script>
+<script type="text/javascript" src="/js/timer.js"></script>
 <script type="text/javascript" src="/js/game.js"></script>
 
 <script type="text/javascript">
-pp.gameStart();
+var g = new Game($(".game-container"));
+g.start();
 </script>
 {% endblock %}
