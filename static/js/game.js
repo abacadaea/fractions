@@ -25,7 +25,7 @@ Fraction.equals = function(f1, f2) {
 
 Fraction.randomFraction = function(cap) {
   var numerator = 1 + Math.floor(Math.random() * cap);
-  var denominator = 1 + Math.floor(Math.random() * cap);
+  var denominator = 2 + Math.floor(Math.random() * (cap - 1));
   return new Fraction(numerator, denominator);
 }
 
@@ -90,13 +90,13 @@ Puzzle.prototype.toString = function() {
 }
 
 
-Puzzle.generatePuzzle = function(id) {
+Puzzle.generatePuzzle = function(id, cap) {
   var f1 = new Fraction(0,1);
   var f2 = new Fraction(0,1);
   // maybe can allow equals
   while (Fraction.equals(f1,f2)) {
-    f1 = Fraction.randomFraction(5);
-    f2 = Fraction.randomFraction(5);
+    f1 = Fraction.randomFraction(cap);
+    f2 = Fraction.randomFraction(cap);
   }
   return new Puzzle(f1, f2, id);
 }
@@ -108,6 +108,8 @@ Puzzle.generatePuzzle = function(id) {
 function PuzzlePlayer(selector) {
   this.selector = selector;
   this.score = 0;
+  this.level = 1;
+  this.combo = 0;
   this.puzzles = [];
   
   // scope hack
@@ -125,7 +127,16 @@ PuzzlePlayer.prototype.start = function() {
     .append(
       $("<div/>")
         .addClass("game-score")
-        .html("Score: <span class=\"score\">0</span>")
+        .append(
+          $("<span/>")
+            .addClass("game-stat")
+            .html("Score: <span class=\"score\">0</span>")
+        )
+        .append(
+          $("<span/>")
+            .addClass("game-stat")
+            .html("Level: <span class=\"level\">1</span>")
+        )
     ).append(
       $("<table/>")
         .addClass("puzzle-list")
@@ -141,7 +152,7 @@ PuzzlePlayer.prototype.displayPuzzle = function(puzzle) {
 }
 
 PuzzlePlayer.prototype.nextPuzzle = function() {
-  var puzzle = Puzzle.generatePuzzle(this.index);
+  var puzzle = Puzzle.generatePuzzle(this.index, 5 * this.level);
   this.puzzles.push(puzzle);
 
   this.displayPuzzle(puzzle);
@@ -150,13 +161,29 @@ PuzzlePlayer.prototype.nextPuzzle = function() {
 PuzzlePlayer.prototype.select = function(value) {
   // last puzzle
   var puzzle = this.puzzles[this.puzzles.length - 1];
-
   puzzle.select(value);
-  console.log(puzzle);
-  this.score += (puzzle.isCorrect() ? 1 : -1);
+
+  var delta = 0;
+
+  if (puzzle.isCorrect()) {
+    delta = '+' + Math.pow(2, this.level - 1);
+    this.score += Math.pow(2, this.level - 1);
+    this.combo += 1;
+    if (this.combo % 5 == 0)
+      this.level += 1;
+  }else {
+    delta = '-1';
+    this.score -= 1;
+    this.combo = 0;
+    this.level = Math.max(this.level - 1, 1);
+  }
+
   $(".puzzle-current").html("");
   $(".puzzle-previous").prepend(puzzle.toString());
-  $(".score").html(this.score);
+  $(".score").html('' + this.score + ' (' + delta + ')');
+  $(".level").html(this.level);
+  $(".combo").html(this.combo);
+
 
   this.nextPuzzle();
 }
@@ -172,7 +199,7 @@ function Game(selector) {
     .append(timer_div)
     .append(game_div);
 
-  this.game_length = 3*1000 + 50; // 30 seconds
+  this.game_length = 60*1000 + 50; // 60 seconds
   this.start_time = 0;
 
   // scope hack

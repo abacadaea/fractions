@@ -10,6 +10,13 @@ div.game-score{
   font-size:2em;
 }
 
+span.game-stat {
+  margin: auto;
+  width: 20%;
+  margin: 10%;
+}
+
+
 table.puzzle-list{
   margin: auto;
 }
