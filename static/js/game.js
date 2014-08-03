@@ -188,6 +188,16 @@ PuzzlePlayer.prototype.select = function(value) {
   this.nextPuzzle();
 }
 
+PuzzlePlayer.prototype.getCorrectBits = function(){
+  var res = "";
+  for (var i = 0; i < this.puzzles.length; i ++){
+    if(this.puzzles[i].isSelected()) {
+      res += (this.puzzles[i].isCorrect() ? "1" : "0");
+    }
+  }
+  return res;
+}
+
 /*
  * Game - wrapper class for PuzzlePlayer
  */
@@ -226,8 +236,20 @@ Game.prototype.finish = function() {
       .append("<h2>Score: " + score + "</h2>")
       .append("<a href=\"/play\" class=\"btn btn-success\">Play again</a>")
   );
+  
+  this.logResult();
 }
 
 Game.prototype.isFinished = function() {
   return this.timer.isFinished();
+}
+
+Game.prototype.logResult = function() {
+  var query = {
+    q: "log_result",
+    score: this.pp.score,
+    correct_bits: this.pp.getCorrectBits()
+  };
+
+  ajaxQuery(query, function(response) {});
 }

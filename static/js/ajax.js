@@ -3,6 +3,7 @@ function ajaxQuery (query, callback) {
   $.ajax({
     url: "/ajax",
     type: "POST",
+    contentType: "application/json",
     data: JSON.stringify(query),
     success: function(response_str){
       response = JSON.parse(response_str);

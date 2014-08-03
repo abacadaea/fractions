@@ -18,10 +18,12 @@ def play():
 
 @app.route('/ajax', methods=['POST'])
 def ajax():
-	print(request.environ["werkzeug.request"].__dict__)
 	data = json.loads(request.data)
-	handler.RequestHandler(data).handle()
-	return self.response
+	data["IP"] = request.environ["REMOTE_ADDR"]
+
+	h = handler.RequestHandler(data)
+	h.handle()
+	return json.dumps(h.response)
 
 if (app.debug):
     from werkzeug.debug import DebuggedApplication
