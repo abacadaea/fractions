@@ -162,7 +162,9 @@ PuzzlePlayer.prototype.select = function(value) {
   this.nextPuzzle();
 }
 
-
+/*
+ * Game - wrapper class for PuzzlePlayer
+ */
 function Game(selector) {
   var timer_div = $("<div/>").addClass("game-timer");
   var game_div = $("<div/>").addClass("game-body");
@@ -192,7 +194,10 @@ Game.prototype.start = function (){
 Game.prototype.finish = function() {
   var score = this.pp.score;
   $(".game-body").html(
-    "<div class='jumbotron'><h1>Game Over!</h1></div>"
+    $("<div/>")
+      .addClass("jumbotron")
+      .append("<h1>Game Over!</h1>")
+      .append("<h2>Score: " + score + "</h2>")
   );
 }
 
