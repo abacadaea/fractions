@@ -49,6 +49,18 @@ Puzzle.prototype.select = function(value) {
   this.selected = value;
 }
 
+Puzzle.prototype.larger = function () {
+  return Math.max (this.left.value, this.right.value);
+}
+
+Puzzle.prototype.smaller = function () {
+  return Math.min (this.left.value, this.right.value);
+}
+
+Puzzle.prototype.ratio = function () {
+  return this.larger() / this.smaller();
+}
+
 Puzzle.prototype.isSelected = function() {
   return this.selected != -1;
 }
@@ -101,14 +113,44 @@ Puzzle.generatePuzzle = function(id, cap) {
   return new Puzzle(f1, f2, id);
 }
 
+Puzzle.generateDifficultPuzzle = function (id, difficulty) {
+  var numPuzzles = Math.floor((difficulty + 1) / 2);
+  var cap = difficulty * 3;
+  var best_puzzle = Puzzle.generatePuzzle(id, cap);
+  for (var i = 0; i < numPuzzles - 1; i ++) {
+    var cur_puzzle = Puzzle.generatePuzzle(id, cap);
+    if (cur_puzzle.ratio() < best_puzzle.ratio())
+       best_puzzle = cur_puzzle;
+  }
+  return best_puzzle;
+}
+
 
 /*
  * PuzzlePlayer - object that allows continuous playing of game
  */
 function PuzzlePlayer(selector) {
+  this.timer_div = $("<div/>").addClass("game-timer");
+  this.game_div = $("<div/>").addClass("game-body");
   this.selector = selector;
+  this.selector
+    .append(this.timer_div)
+    .append(this.game_div);
+
+  this.game_length = 15*1000 + 50; // 5 seconds
+
+  // scope hack
+  var pp = this;
+  this.timer = new DisplayTimer(
+    pp.timer_div, 
+    pp.game_length, 
+    function() {
+      pp.finish("Time's up!"); 
+    });
+
   this.score = 0;
   this.level = 1;
+  this.count = 0;
   this.combo = 0;
   this.puzzles = [];
   
@@ -123,7 +165,7 @@ function PuzzlePlayer(selector) {
 }
 
 PuzzlePlayer.prototype.start = function() {
-  this.selector
+  this.game_div
     .append(
       $("<div/>")
         .addClass("game-score")
@@ -143,7 +185,8 @@ PuzzlePlayer.prototype.start = function() {
         .append($("<thead/>").addClass("puzzle-current"))
         .append($("<tbody/>").addClass("puzzle-previous"))
     );
-      
+
+  this.timer.start();  
   this.nextPuzzle();
 }
 
@@ -152,38 +195,47 @@ PuzzlePlayer.prototype.displayPuzzle = function(puzzle) {
 }
 
 PuzzlePlayer.prototype.nextPuzzle = function() {
-  var puzzle = Puzzle.generatePuzzle(this.index, 5 * this.level);
+  var puzzle = Puzzle.generateDifficultPuzzle(this.puzzles.length, this.level);
+  //var puzzle = Puzzle.generatePuzzle(this.index, this.level);
   this.puzzles.push(puzzle);
-
   this.displayPuzzle(puzzle);
+}
+
+PuzzlePlayer.prototype.getLastPuzzle = function() {
+  return this.puzzles[this.puzzles.length - 1];
 }
 
 PuzzlePlayer.prototype.select = function(value) {
   // last puzzle
-  var puzzle = this.puzzles[this.puzzles.length - 1];
+  var puzzle = this.getLastPuzzle();
   puzzle.select(value);
 
-  var delta = 0;
+  var delta = '';
 
   if (puzzle.isCorrect()) {
-    delta = '+' + Math.pow(2, this.level - 1);
-    this.score += Math.pow(2, this.level - 1);
+    //delta = '+' + Math.pow(2, this.level - 1);
+    //this.score += Math.pow(2, this.level - 1);
+    this.score += 1;
     this.combo += 1;
+    this.count += 1;
+    this.timer.addTime(1000 * (1 + 1 / this.level));
     if (this.combo % 5 == 0)
       this.level += 1;
   }else {
-    delta = '-1';
-    this.score -= 1;
-    this.combo = 0;
-    this.level = Math.max(this.level - 1, 1);
+    //delta = '-1';
+    //this.score -= 1;
+    //this.combo = 0;
+    //this.level = Math.max(this.level - 1, 1);
+    this.finish("Wrong Answer!");
+    return;
   }
 
   $(".puzzle-current").html("");
-  $(".puzzle-previous").prepend(puzzle.toString());
-  $(".score").html('' + this.score + ' (' + delta + ')');
+  //$(".puzzle-previous").prepend(puzzle.toString());
+  //$(".score").html('' + this.score + ' (' + delta + ')');
+  $(".score").html(this.score);
   $(".level").html(this.level);
   $(".combo").html(this.combo);
-
 
   this.nextPuzzle();
 }
@@ -198,57 +250,34 @@ PuzzlePlayer.prototype.getCorrectBits = function(){
   return res;
 }
 
-/*
- * Game - wrapper class for PuzzlePlayer
- */
-function Game(selector) {
-  var timer_div = $("<div/>").addClass("game-timer");
-  var game_div = $("<div/>").addClass("game-body");
-  this.selector = selector;
-  this.selector
-    .append(timer_div)
-    .append(game_div);
+PuzzlePlayer.prototype.finish = function(display) {
+  if (!display || true) display = "Game Over!";
 
-  this.game_length = 60*1000 + 50; // 60 seconds
-  this.start_time = 0;
-
-  // scope hack
-  var game = this;
-  this.timer = new DisplayTimer(
-    timer_div, 
-    this.game_length, 
-    function() { game.finish(); timer_div.hide(); });
-  this.pp = new PuzzlePlayer(game_div);
-}
-
-Game.prototype.start = function (){
-  this.start_time = new Date().getTime();
-  this.timer.start();
-  this.pp.start();
-}
-
-Game.prototype.finish = function() {
-  var score = this.pp.score;
-  $(".game-body").html(
+  $(".game-score").html(
     $("<div/>")
       .addClass("jumbotron")
-      .append("<h1>Game Over!</h1>")
-      .append("<h2>Score: " + score + "</h2>")
+      .append("<h1>" + display + "</h1>")
+      //.append("<h3>" + display + "</h3>")
+      .append("<h3>Score: " + this.score + "</h3>")
       .append("<a href=\"/play\" class=\"btn btn-success\">Play again</a>")
   );
+  $(".puzzle-current").html(this.getLastPuzzle().toString());
   
+  this.timer.stop();
+  this.timer_div.hide();
+  this.select = function(x) {}
   this.logResult();
 }
 
-Game.prototype.isFinished = function() {
+PuzzlePlayer.prototype.isFinished = function() {
   return this.timer.isFinished();
 }
 
-Game.prototype.logResult = function() {
+PuzzlePlayer.prototype.logResult = function() {
   var query = {
     q: "log_result",
-    score: this.pp.score,
-    correct_bits: this.pp.getCorrectBits()
+    score: this.score,
+    correct_bits: this.getCorrectBits()
   };
 
   ajaxQuery(query, function(response) {});
