@@ -114,8 +114,9 @@ Puzzle.generatePuzzle = function(id, cap) {
 }
 
 Puzzle.generateDifficultPuzzle = function (id, difficulty) {
-  var numPuzzles = Math.floor((difficulty + 1) / 2);
-  var cap = difficulty * 3;
+  //var numPuzzles = Math.floor((difficulty + 1) / 2);
+  var numPuzzles = difficulty; 
+  var cap = difficulty * 2 + 1;
   var best_puzzle = Puzzle.generatePuzzle(id, cap);
   for (var i = 0; i < numPuzzles - 1; i ++) {
     var cur_puzzle = Puzzle.generatePuzzle(id, cap);
@@ -137,7 +138,7 @@ function PuzzlePlayer(selector) {
     .append(this.timer_div)
     .append(this.game_div);
 
-  this.game_length = 15*1000 + 50; // 5 seconds
+  this.game_length = 30*1000 + 50; // 30 seconds
 
   // scope hack
   var pp = this;
@@ -277,7 +278,7 @@ PuzzlePlayer.prototype.logResult = function() {
   var query = {
     q: "log_result",
     score: this.score,
-    correct_bits: this.getCorrectBits()
+    ts: Math.floor(new Date().getTime() / 1000)
   };
 
   ajaxQuery(query, function(response) {});

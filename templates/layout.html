@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>One-Half</title>
+    <title>1/2</title>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/layout.css">
     {% block css %}{% endblock %}
@@ -9,18 +9,22 @@
   <body>
     <div class="container">
       <div class="row">
-        <h1><a href="/">One-Half</a></h1>
-        <h3>How well do you know your fractions?</h3>
-        <hr>
-      </div> <!-- /row -->
-
-      <div class="row">
-      {% block main_body %}{% endblock %}
+        <div class="main-body">
+          <h1><a href="/">1/2</a></h1>
+          <h3>How well do you know your fractions?</h3>
+          <hr>
+          {% block main_body %}{% endblock %}
+        </div>
+        <div class="below-main-body">
+          {% block below_main_body %}{% endblock %}
+        </div>
       </div> <!-- /row -->
     </div> <!-- /container -->
 
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/math.min.js"></script>
+    <script type="text/javascript" src="/js/ajax.js"></script>
     {% block js %}
     {% endblock %}
   </body>
