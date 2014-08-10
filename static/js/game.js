@@ -79,10 +79,10 @@ Puzzle.prototype.getSign = function() {
 
 Puzzle.prototype.toString = function() {
   var left_div = $("<td/>")
-    .addClass("puzzle-fraction")
+    .addClass("puzzle-fraction puzzle-fraction-left")
     .html(this.left.toString());
   var right_div = $("<td/>")
-    .addClass("puzzle-fraction")
+    .addClass("puzzle-fraction puzzle-fraction-right")
     .html(this.right.toString());
   var sign_div = $("<td/>")
     .addClass("puzzle-sign")
@@ -192,7 +192,14 @@ PuzzlePlayer.prototype.start = function() {
 }
 
 PuzzlePlayer.prototype.displayPuzzle = function(puzzle) {
+  var pp = this;
   $(".puzzle-current").html(puzzle.toString());
+  $(".puzzle-fraction-left").click(function(event){
+    pp.select(0);
+  });
+  $(".puzzle-fraction-right").click(function(event){
+    pp.select(1);
+  });
 }
 
 PuzzlePlayer.prototype.nextPuzzle = function() {
