@@ -1,8 +1,8 @@
 import MySQLdb
 
 mysqlHost = "localhost"
-mysqlUser = "ec2-user"
-mysqlPassword = "password"
+mysqlUser = "root"
+mysqlPassword = ""
 mysqlDB = "fractions"
 
 connection = MySQLdb.connect(
@@ -15,7 +15,7 @@ connection = MySQLdb.connect(
 
 connection.autocommit(True)
 
-cursor = self.connection.cursor(MySQLdb.cursors.DictCursor)
+cursor = connection.cursor(MySQLdb.cursors.DictCursor)
 
 def insert(table, row):
 	global cursor
