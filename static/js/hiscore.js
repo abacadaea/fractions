@@ -27,7 +27,7 @@ function pollHiscore (query, selector) {
       displayHiscore (
         response.output.scores, 
         $(elem.children[1]));
-    }, 1000);
+    }, 5000);
   });
 }
 

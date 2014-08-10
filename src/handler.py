@@ -19,16 +19,12 @@ class RequestHandler:
 
 	def log_result(self):
 		del self.data["q"]
-
-		f = open("log.txt","a")
-		f.write(json.dumps(self.data) + '\n')
-		f.close()
+		score.Score(self.data).insert()
 		return True
 	
 	def get_hiscore(self):
 		filters = []
-		filters.append("UNIX_TIMESTAMP(ts) > %d" % self.data["ts"])
-		filters.append("")
+		filters.append("UNIX_TIMESTAMP(Score.ts) > UNIX_TIMESTAMP(NOW())-%d" % self.data["time"])
 		scores = score.Score.getTop(filters, self.data["number"])
 		self.output["scores"] = [x.__dict__ for x in scores]
 		return True

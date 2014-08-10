@@ -138,7 +138,7 @@ function PuzzlePlayer(selector) {
     .append(this.timer_div)
     .append(this.game_div);
 
-  this.game_length = 30*1000 + 50; // 30 seconds
+  this.game_length = 3*1000 + 50; // 30 seconds
 
   // scope hack
   var pp = this;
@@ -221,20 +221,21 @@ PuzzlePlayer.prototype.select = function(value) {
     this.count += 1;
     if (this.combo % 5 == 0) {
       //this.timer.addTime(5000 * (1 + 1 / this.level));
-      this.timer.addTime(5000);
+      //this.timer.addTime(5000);
       this.level += 1;
     }
+    $(".puzzle-previous").html("");
   }else {
     //delta = '-1';
     this.score -= 1;
     this.combo = 0;
     this.level = Math.max(this.level - 1, 1);
+    $(".puzzle-previous").html(puzzle.toString());
     //this.finish("Wrong Answer!");
     //return;
   }
 
   $(".puzzle-current").html("");
-  //$(".puzzle-previous").prepend(puzzle.toString());
   //$(".score").html('' + this.score + ' (' + delta + ')');
   $(".score").html(this.score);
   $(".level").html(this.level);
