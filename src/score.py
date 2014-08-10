@@ -1,4 +1,4 @@
-import json
+import db, json
 
 class Score:
 	def __init__(self, row):
@@ -9,6 +9,16 @@ class Score:
 
 		if row: self.__dict__.update(row)
 
+	def getByID(self, scoreID):
+		db.cursor.execute("SELECT * FROM Score WHERE scoreID=%s" % scoreID)
+		return Score(db.cursor.fetchall()[0])
+
+	def getTop(self, filters):
+		where = "WHERE " + " AND ".join(filters)
+		db.cursor.execute("SELECT * FROM Score %s" % filters)
+		return [Score(row) for row in list(db.cursor.fetchall())]
+
+	"""
 	@staticmethod
 	def getScores():
 		scores = []
@@ -19,3 +29,4 @@ class Score:
 
 			scores.append(Score(json.loads(json_str)))
 		return scores
+	"""

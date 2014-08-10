@@ -26,7 +26,9 @@ class RequestHandler:
 		return True
 	
 	def get_hiscore(self):
-		scores = [x.__dict__ for x in score.Score.getScores()]
-
-		self.output["scores"] = scores[:self.data["number"]]
+		filters = []
+		filters.append("UNIX_TIMESTAMP(ts) > %d" % self.data["ts"])
+		filters.append("")
+		scores = score.Score.getTop(filters, self.data["number"])
+		self.output["scores"] = [x.__dict__ for x in scores]
 		return True

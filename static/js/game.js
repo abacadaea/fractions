@@ -173,12 +173,12 @@ PuzzlePlayer.prototype.start = function() {
         .append(
           $("<span/>")
             .addClass("game-stat")
-            .html("Score: <span class=\"score\">0</span>")
+            .append("Score: <span class=\"score\">0</span>")
         )
         .append(
           $("<span/>")
             .addClass("game-stat")
-            .html("Level: <span class=\"level\">1</span>")
+            .append("Level: <span class=\"level\">1</span>")
         )
     ).append(
       $("<table/>")
@@ -215,20 +215,22 @@ PuzzlePlayer.prototype.select = function(value) {
 
   if (puzzle.isCorrect()) {
     //delta = '+' + Math.pow(2, this.level - 1);
-    //this.score += Math.pow(2, this.level - 1);
-    this.score += 1;
+    this.score += Math.pow(2, this.level - 1);
+    //this.score += 1;
     this.combo += 1;
     this.count += 1;
-    this.timer.addTime(1000 * (1 + 1 / this.level));
-    if (this.combo % 5 == 0)
+    if (this.combo % 5 == 0) {
+      //this.timer.addTime(5000 * (1 + 1 / this.level));
+      this.timer.addTime(5000);
       this.level += 1;
+    }
   }else {
     //delta = '-1';
-    //this.score -= 1;
-    //this.combo = 0;
-    //this.level = Math.max(this.level - 1, 1);
-    this.finish("Wrong Answer!");
-    return;
+    this.score -= 1;
+    this.combo = 0;
+    this.level = Math.max(this.level - 1, 1);
+    //this.finish("Wrong Answer!");
+    //return;
   }
 
   $(".puzzle-current").html("");
