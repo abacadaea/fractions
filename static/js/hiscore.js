@@ -35,12 +35,19 @@ function pollHiscore (query, selector) {
 
 pollHiscore({
   q: "get_hiscore",
+  time: 0,
+  number: 10,
+  order_by: "ts"
+}, $(".score-recent"));
+
+pollHiscore({
+  q: "get_hiscore",
   time: 24*3600,
-  number: 20
+  number: 10
 }, $(".hiscore-recent"));
 
 pollHiscore({
   q: "get_hiscore",
   time: 0,
-  number: 20
+  number: 10
 }, $(".hiscore-global"));

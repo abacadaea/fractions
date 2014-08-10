@@ -29,11 +29,10 @@ class Score:
 		return Score(db.cursor.fetchall()[0])
 
 	@staticmethod
-	def getTop(filters, number):
+	def getTop(filters, number, order_by = "score"):
 		where = ""
 		if len(filters) > 0:
 			where = "WHERE " + " AND ".join(filters)
-		print(where)
 		db.cursor.execute("""
 			SELECT 
 				score, 
@@ -41,9 +40,9 @@ class Score:
 				name, 
 				UNIX_TIMESTAMP(ts) as ts 
 			FROM Score %s 
-			ORDER BY score DESC
+			ORDER BY %s DESC
 			LIMIT %d
-		""" % (where, number))
+		""" % (where, order_by, number))
 		return [Score(row) for row in list(db.cursor.fetchall())]
 
 	"""
