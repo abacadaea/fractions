@@ -9,10 +9,11 @@
   <body>
     <div class="container">
       <div class="row">
+        <div class="pull-right"><h1 class="name"></h1></div>
+        <h1><a href="/">1/2</a></h1>
+        <h3>How well do you know your fractions?</h3>
+        <hr>
         <div class="main-body">
-          <h1><a href="/">1/2</a></h1>
-          <h3>How well do you know your fractions?</h3>
-          <hr>
           {% block main_body %}{% endblock %}
         </div>
         <div class="below-main-body">
@@ -26,6 +27,7 @@
     <script type="text/javascript" src="/js/math.min.js"></script>
     <script type="text/javascript" src="/js/ajax.js"></script>
     <script type="text/javascript" src="/js/timer.js"></script>
+    <script type="text/javascript" src="/js/name.js"></script>
     {% block js %}
     {% endblock %}
   </body>

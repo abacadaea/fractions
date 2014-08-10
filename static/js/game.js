@@ -280,6 +280,7 @@ PuzzlePlayer.prototype.isFinished = function() {
 PuzzlePlayer.prototype.logResult = function() {
   var query = {
     q: "log_result",
+    name: getName(),
     score: this.score,
     ts: Math.floor(new Date().getTime() / 1000)
   };
