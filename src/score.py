@@ -40,7 +40,9 @@ class Score:
 				IP,
 				name, 
 				UNIX_TIMESTAMP(ts) as ts 
-			FROM Score %s LIMIT %d
+			FROM Score %s 
+			ORDER BY score DESC
+			LIMIT %d
 		""" % (where, number))
 		return [Score(row) for row in list(db.cursor.fetchall())]
 

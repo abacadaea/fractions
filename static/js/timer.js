@@ -18,9 +18,39 @@ Timer.pad = function (seconds) {
   return (seconds < 10 ? '0' + seconds : '' + seconds);
 }
 
+Timer.displayTimeDiff = function(ts) {
+  var tdiff = Math.floor(Timer.getTime()/1000 - ts);
+  var num = 0;
+  var unit = "";
+  if (tdiff < 60) {
+    num = tdiff;
+    unit = "second";
+  }else if (tdiff < 60 * 60 * 2) {
+    num = tdiff/60;
+    unit = "minute";
+  }else if (tdiff < 60 * 60 * 24) {
+    num = tdiff / (60 * 60);
+    unit = "hour";
+  }else if (tdiff < 60 * 60 * 24 * 365) {
+    num = tdiff / (60 * 60 * 24);
+    unit = "day";
+  }else {
+    num = tdiff / (60 * 60 * 24 * 365);
+    unit = "year";
+  }
+
+  num = Math.floor(num);
+  return num.toString()
+        + " "
+        + unit
+        + (num == 1 ? "" : "s")
+        + " ago";
+}
+
 Timer.prototype.getTime = function () {
   return Math.max(0, this.startTime + this.length - Timer.getTime());
 }
+
 
 Timer.prototype.addTime = function (delta) {
   this.length += delta;

@@ -24,7 +24,10 @@ class RequestHandler:
 	
 	def get_hiscore(self):
 		filters = []
-		filters.append("UNIX_TIMESTAMP(Score.ts) > UNIX_TIMESTAMP(NOW())-%d" % self.data["time"])
+		if (self.data["time"] > 0):
+			filters.append(
+				"UNIX_TIMESTAMP(Score.ts) > UNIX_TIMESTAMP(NOW())-%d" 
+				% self.data["time"])
 		scores = score.Score.getTop(filters, self.data["number"])
 		self.output["scores"] = [x.__dict__ for x in scores]
 		return True

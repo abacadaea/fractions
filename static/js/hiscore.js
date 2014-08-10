@@ -2,8 +2,9 @@ $(document).ready(function() {
   $("table.hiscore")
     .append($("<thead/>")
       .append($("<tr/>")
-        .append($("<th/>").html("Initials"))
+        .append($("<th/>").html("Name"))
         .append($("<th/>").html("Score"))
+        .append($("<th/>").html(""))
       )
     ).append($("<tbody/>"));
 });
@@ -15,6 +16,7 @@ function displayHiscore (scores, selector) {
       $("<tr/>")
         .append($("<td/>").html(scores[i].name))
         .append($("<td/>").html(scores[i].score))
+        .append($("<td/>").html(Timer.displayTimeDiff(scores[i].ts)))
     )
   }
 }
