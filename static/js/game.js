@@ -287,6 +287,7 @@ PuzzlePlayer.prototype.isFinished = function() {
 }
 
 PuzzlePlayer.prototype.logResult = function() {
+  promptName();
   var query = {
     q: "log_result",
     name: getName(),

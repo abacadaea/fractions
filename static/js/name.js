@@ -3,10 +3,10 @@ function getName (){
 }
 function setName (name){
   $.cookie("name", name);
-  window.location.reload();
+  $(".name").html(getName());
 }
 function promptName() {
-  var name = prompt("What's your name?", "");
+  var name = prompt("What's your name?", getName());
   setName(name); 
 }
 function checkName (){
