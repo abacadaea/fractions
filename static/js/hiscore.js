@@ -2,8 +2,9 @@ $(document).ready(function() {
   $("table.hiscore")
     .append($("<thead/>")
       .append($("<tr/>")
-        .append($("<th/>").html("Initials"))
+        .append($("<th/>").html("Name"))
         .append($("<th/>").html("Score"))
+        .append($("<th/>").html(""))
       )
     ).append($("<tbody/>"));
 });
@@ -15,6 +16,7 @@ function displayHiscore (scores, selector) {
       $("<tr/>")
         .append($("<td/>").html(scores[i].name))
         .append($("<td/>").html(scores[i].score))
+        .append($("<td/>").html(Timer.displayTimeDiff(scores[i].ts)))
     )
   }
 }
@@ -27,18 +29,25 @@ function pollHiscore (query, selector) {
       displayHiscore (
         response.output.scores, 
         $(elem.children[1]));
-    }, 1000);
+    }, 15000);
   });
 }
 
 pollHiscore({
   q: "get_hiscore",
+  time: 0,
+  number: 10,
+  order_by: "ts"
+}, $(".score-recent"));
+
+pollHiscore({
+  q: "get_hiscore",
   time: 24*3600,
-  number: 20
+  number: 10
 }, $(".hiscore-recent"));
 
 pollHiscore({
   q: "get_hiscore",
   time: 0,
-  number: 20
+  number: 10
 }, $(".hiscore-global"));

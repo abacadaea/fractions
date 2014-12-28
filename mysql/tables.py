@@ -1,7 +1,7 @@
 tables = {}
 
 tables["User"] = """
-	userID INT (11) AUTO_INCREMENT UNIQUE,
+	userID INT (11) UNIQUE AUTO_INCREMENT,
 	username VARCHAR(40),
 	password VARCHAR(40),
 
@@ -11,11 +11,11 @@ tables["User"] = """
 """
 
 tables["Score"] = """
-	scoreID INT (11) AUTO_INCREMENT UNIQUE,
+	scoreID INT (11) UNIQUE AUTO_INCREMENT,
 	score INT (11),
 	name VARCHAR (80),
 	IP VARCHAR (80),
 	ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-	PRIMARY KEY(userID)
+	PRIMARY KEY(scoreID)
 """

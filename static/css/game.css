@@ -37,6 +37,11 @@ td.puzzle-fraction{
   width: 30%;
 }
 
+td.puzzle-fraction.puzzle-fraction-left,
+td.puzzle-fraction.puzzle-fraction-right {
+  cursor: pointer;
+}
+
 td.puzzle-sign{
   width: 40%;
 }

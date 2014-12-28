@@ -7,7 +7,14 @@
 <div class="col-md-12">
   <div class="jumbotron">
     <h1>Welcome to 1/2</h1>
-    <h2>Use the left and right arrow keys to select the bigger fraction</h2>
+    <h2>Use the left and right arrow keys to select the bigger fraction
+    <br>
+    Correct answers earn more time, wrong answers lose you time
+    <br>
+    Answer 5 consecutive questions correctly to level up
+    <br>
+    Leveling up earns you more points
+    </h2>
     <h2>Good luck!</h2>
     <a class="btn btn-success" href="/play">Let's Go!</a>
   </div>
@@ -15,11 +22,15 @@
 {% endblock %}
 {% block below_main_body %}
 <div class="hiscore-container">
-  <div class="col-md-6">
+  <div class="col-md-4">
+    <h2>Recent Scores</h2>
+    <table class="table hiscore score-recent"></table>
+  </div>
+  <div class="col-md-4">
     <h2>Recent High Scores</h2>
     <table class="table hiscore hiscore-recent"></table>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-4">
     <h2>All Time High Scores</h2>
     <table class="table hiscore hiscore-global"></table>
   </div>

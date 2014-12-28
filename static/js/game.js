@@ -79,10 +79,10 @@ Puzzle.prototype.getSign = function() {
 
 Puzzle.prototype.toString = function() {
   var left_div = $("<td/>")
-    .addClass("puzzle-fraction")
+    .addClass("puzzle-fraction puzzle-fraction-left")
     .html(this.left.toString());
   var right_div = $("<td/>")
-    .addClass("puzzle-fraction")
+    .addClass("puzzle-fraction puzzle-fraction-right")
     .html(this.right.toString());
   var sign_div = $("<td/>")
     .addClass("puzzle-sign")
@@ -138,7 +138,7 @@ function PuzzlePlayer(selector) {
     .append(this.timer_div)
     .append(this.game_div);
 
-  this.game_length = 30*1000 + 50; // 30 seconds
+  this.game_length = 15*1000 + 50; // 15 seconds
 
   // scope hack
   var pp = this;
@@ -192,7 +192,14 @@ PuzzlePlayer.prototype.start = function() {
 }
 
 PuzzlePlayer.prototype.displayPuzzle = function(puzzle) {
+  var pp = this;
   $(".puzzle-current").html(puzzle.toString());
+  $(".puzzle-fraction-left").click(function(event){
+    pp.select(0);
+  });
+  $(".puzzle-fraction-right").click(function(event){
+    pp.select(1);
+  });
 }
 
 PuzzlePlayer.prototype.nextPuzzle = function() {
@@ -214,29 +221,32 @@ PuzzlePlayer.prototype.select = function(value) {
   var delta = '';
 
   if (puzzle.isCorrect()) {
-    //delta = '+' + Math.pow(2, this.level - 1);
+    delta = '+' + Math.pow(2, this.level - 1);
     this.score += Math.pow(2, this.level - 1);
     //this.score += 1;
     this.combo += 1;
     this.count += 1;
+    this.timer.addTime(1000 * (1 + 1 / this.level));
     if (this.combo % 5 == 0) {
       //this.timer.addTime(5000 * (1 + 1 / this.level));
-      this.timer.addTime(5000);
+      //this.timer.addTime(5000);
       this.level += 1;
     }
+    $(".puzzle-previous").html("");
   }else {
-    //delta = '-1';
+    delta = '-1';
+    this.timer.addTime(-5000);
     this.score -= 1;
     this.combo = 0;
     this.level = Math.max(this.level - 1, 1);
+    $(".puzzle-previous").html(puzzle.toString());
     //this.finish("Wrong Answer!");
     //return;
   }
 
   $(".puzzle-current").html("");
-  //$(".puzzle-previous").prepend(puzzle.toString());
-  //$(".score").html('' + this.score + ' (' + delta + ')');
-  $(".score").html(this.score);
+  $(".score").html('' + this.score + ' (' + delta + ')');
+  //$(".score").html(this.score);
   $(".level").html(this.level);
   $(".combo").html(this.combo);
 
@@ -277,8 +287,10 @@ PuzzlePlayer.prototype.isFinished = function() {
 }
 
 PuzzlePlayer.prototype.logResult = function() {
+  promptName();
   var query = {
     q: "log_result",
+    name: getName(),
     score: this.score,
     ts: Math.floor(new Date().getTime() / 1000)
   };
