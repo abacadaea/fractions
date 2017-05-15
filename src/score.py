@@ -1,59 +1,30 @@
-import db, json
+import json
+import operator
+import time
+
+import db
 
 class Score:
-	def __init__(self, row):
-		self.score = 0
-		self.IP = ''
-		self.ts = 0
-		self.name = '??'
+    def __init__(self, row):
+        self.score = 0
+        self.ts = None # time.time() ? 
+        self.name = '??'
 
-		if row: self.__dict__.update(row)
+        if row: self.__dict__.update(row)
 
-	def insert(self):
-		db.cursor.execute("""
-			INSERT INTO Score
-			(score, name, IP)
-			VALUES
-			(%s,%s,%s)
-		""", (self.score, self.name, self.IP))
+    def insert(self):
+        db.insert(self.score, self.name, self.ts)
 
-	def getByID(self, scoreID):
-		db.cursor.execute("""
-			SELECT 
-				score, 
-				IP,
-				name, 
-				UNIX_TIMESTAMP(ts) as ts 
-			FROM Score WHERE scoreID=%d
-		""" % scoreID)
-		return Score(db.cursor.fetchall()[0])
+    @staticmethod
+    def get_scores(number):
+        """ return last `number` scores """
+        json_list = db.get_all_json()
+        score_list = [Score(x) for x in json_list]
+        return score_list[-number:]
 
-	@staticmethod
-	def getTop(filters, number, order_by = "score"):
-		where = ""
-		if len(filters) > 0:
-			where = "WHERE " + " AND ".join(filters)
-		db.cursor.execute("""
-			SELECT 
-				score, 
-				IP,
-				name, 
-				UNIX_TIMESTAMP(ts) as ts 
-			FROM Score %s 
-			ORDER BY %s DESC
-			LIMIT %d
-		""" % (where, order_by, number))
-		return [Score(row) for row in list(db.cursor.fetchall())]
-
-	"""
-	@staticmethod
-	def getScores():
-		scores = []
-		f = open("log.txt","r")
-		while True:
-			json_str = f.readline()
-			if not json_str: break
-
-			scores.append(Score(json.loads(json_str)))
-		return scores
-	"""
+    @staticmethod
+    def get_scores_sorted(time_threshold, number):
+        score_list = Score.get_scores(0)
+        if time_threshold > 0:
+            score_list = [x for x in score_list if x.ts > time.time() - time_threshold]
+        return reversed(sorted(score_list, key=operator.attrgetter('score')))

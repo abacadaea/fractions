@@ -37,7 +37,7 @@ pollHiscore({
   q: "get_hiscore",
   time: 0,
   number: 10,
-  order_by: "ts"
+  order: "ts"
 }, $(".score-recent"));
 
 pollHiscore({

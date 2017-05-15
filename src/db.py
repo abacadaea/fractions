@@ -1,35 +1,20 @@
-import MySQLdb
+import json
+import time
 
-mysqlHost = "localhost"
-mysqlUser = "root"
-mysqlPassword = ""
-mysqlDB = "fractions"
+SCORE_FILE = "data/scores.txt"
 
-connection = MySQLdb.connect(
-	host = mysqlHost,
-	user = mysqlUser,
-	passwd = mysqlPassword,
-	db = mysqlDB,
-	charset = 'utf8',
-	use_unicode = True)
+def insert(score, name, ts):
+    f = open(SCORE_FILE,"a")
+    assert(isinstance(score, int))
+    assert(isinstance(name, unicode))
+    assert(isinstance(ts, int))
+    f.write(json.dumps({"score": score, "name": name, "ts": ts}) + '\n')
+    f.close()
 
-connection.autocommit(True)
-
-cursor = connection.cursor(MySQLdb.cursors.DictCursor)
-
-def insert(table, row):
-	global cursor
-	
-	keys = row.keys()
-	values = [row[key] for key in keys]
-	key_str = ",".join(keys)
-	value_str = ",".join(["%s" for key in keys])
-
-	query = "INSERT INTO %s (%s) VALUES (%s)" % (table, key_str, value_str)
-
-	cursor.execute(query, tuple(values))
-
-def insert_many(table, rows):
-	global cursor
-
-	pass
+def get_all_json():
+    ret = []
+    f = open(SCORE_FILE,"r")
+    for line in f.readlines():
+        ret.append(json.loads(line))
+    f.close()
+    return ret
