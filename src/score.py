@@ -27,4 +27,5 @@ class Score:
         score_list = Score.get_scores(0)
         if time_threshold > 0:
             score_list = [x for x in score_list if x.ts > time.time() - time_threshold]
-        return reversed(sorted(score_list, key=operator.attrgetter('score')))
+        sorted_score_list = list(reversed(sorted(score_list, key=operator.attrgetter('score'))))
+        return sorted_score_list[:10]
