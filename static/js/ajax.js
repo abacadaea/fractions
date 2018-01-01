@@ -1,7 +1,7 @@
 function ajaxQuery (query, callback) {
   console.log(query);
   $.ajax({
-    url: "/ajax",
+    url: "ajax",
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(query),
