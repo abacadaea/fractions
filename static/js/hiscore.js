@@ -42,7 +42,7 @@ pollHiscore({
 
 pollHiscore({
   q: "get_hiscore",
-  time: 24*3600,
+  time: 30*24*3600,
   number: 10
 }, $(".hiscore-recent"));
 
