@@ -73,7 +73,7 @@ Puzzle.prototype.getSign = function() {
   if (this.isSelected()) {
     return (this.solution ? "<" : ">");
   }else {
-    return "?";
+    return " ";
   }
 }
 
