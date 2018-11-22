@@ -138,7 +138,7 @@ function PuzzlePlayer(selector) {
     .append(this.timer_div)
     .append(this.game_div);
 
-  this.game_length = 15*1000 + 50; // 15 seconds
+  this.game_length = 60*1000 + 50; // 15 seconds
 
   // scope hack
   var pp = this;
@@ -166,7 +166,7 @@ function PuzzlePlayer(selector) {
 }
 
 PuzzlePlayer.prototype.start = function() {
-  promptName();
+  //promptName();
   this.game_div
     .append(
       $("<div/>")
@@ -222,12 +222,12 @@ PuzzlePlayer.prototype.select = function(value) {
   var delta = '';
 
   if (puzzle.isCorrect()) {
-    delta = '+' + Math.pow(2, this.level - 1);
-    this.score += Math.pow(2, this.level - 1);
-    //this.score += 1;
+    //delta = '+' + Math.pow(2, this.level - 1);
+    //this.score += Math.pow(2, this.level - 1);
+    this.score += 1;
     this.combo += 1;
     this.count += 1;
-    this.timer.addTime(1000 * (1 + 1 / this.level));
+    //this.timer.addTime(1000 * (1 + 1 / this.level));
     if (this.combo % 5 == 0) {
       //this.timer.addTime(5000 * (1 + 1 / this.level));
       //this.timer.addTime(5000);
@@ -235,19 +235,16 @@ PuzzlePlayer.prototype.select = function(value) {
     }
     $(".puzzle-previous").html("");
   }else {
-    delta = '-1';
-    this.timer.addTime(-5000);
-    this.score -= 1;
-    this.combo = 0;
-    this.level = Math.max(this.level - 1, 1);
+    //delta = '-1';
+    //this.timer.addTime(-5000);
+    this.score -= 2;
+    //this.combo = 0;
+    //this.level = Math.max(this.level - 1, 1); Ray: Changed this
     $(".puzzle-previous").html(puzzle.toString());
-    //this.finish("Wrong Answer!");
-    //return;
   }
 
   $(".puzzle-current").html("");
-  $(".score").html('' + this.score + ' (' + delta + ')');
-  //$(".score").html(this.score);
+  $(".score").html('' + this.score); //+ ' (' + delta + ')');
   $(".level").html(this.level);
   $(".combo").html(this.combo);
 
@@ -273,7 +270,7 @@ PuzzlePlayer.prototype.finish = function(display) {
       .append("<h1>" + display + "</h1>")
       //.append("<h3>" + display + "</h3>")
       .append("<h3>Score: " + this.score + "</h3>")
-      .append("<a href=\"/play\" class=\"btn btn-success\">Play again</a>")
+      .append("<a href=\"play\" class=\"btn btn-success\">Play again</a>")
   );
   $(".puzzle-current").html(this.getLastPuzzle().toString());
   
